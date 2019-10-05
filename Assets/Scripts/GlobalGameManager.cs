@@ -12,12 +12,31 @@ public class GlobalGameManager : MonoBehaviour
         CardBuilding,
     }
 
-    public CreatureDefinitionsLibrary creatureDefinitionsLibrary;
+    //public CreatureDefinitionsLibrary creatureDefinitionsLibrary;
+    public CardBaseDefinitionLibrary cardBaseDefinitionsLibrary;
 
     public GameObject busyRaycastBlocker;
 
     public FightManager fightManager { get; set; }
     public PlayGrid grid { get; set; }
+
+    public List<Card> ownedCards { get; set; }
+    public Card mcCard;
+
+    int _coinsAmount = 0;
+    public int CoinsAmount
+    {
+        get
+        {
+            return _coinsAmount;
+        }
+        set
+        {
+            _coinsAmount = value;
+            OnNewCoinsAmount?.Invoke(_coinsAmount);
+        }
+    }
+    public static Action<int> OnNewCoinsAmount;
 
     GameState _currentGameState = GameState.None;
     public GameState CurrentGameState {
@@ -69,6 +88,10 @@ public class GlobalGameManager : MonoBehaviour
     {
         fightManager = gameObject.AddComponent<FightManager>();
         grid = FindObjectOfType<PlayGrid>();
+
+        mcCard = new Card(CardDefinitionType.MC);
+        ownedCards = new List<Card>();
+        ownedCards.Add(mcCard);
     }
 
     // Update is called once per frame

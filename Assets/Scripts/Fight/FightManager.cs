@@ -4,35 +4,6 @@ using UnityEngine;
 
 public class FightManager : MonoBehaviour
 {
-    //static FightManager _instance;
-    //public static FightManager Instance
-    //{
-    //    get
-    //    {
-    //        if (_instance == null)
-    //        {
-    //            _instance = FindObjectOfType<FightManager>();
-    //        }
-    //        if (_instance == null)
-    //        {
-    //            GameObject fightManagerInstance = new GameObject("FightManager");
-    //            _instance = fightManagerInstance.AddComponent<FightManager>();
-    //        }
-    //        return _instance;
-    //    }
-    //}
-
-    //private void Awake()
-    //{
-    //    if (_instance != null && _instance != this)
-    //    {
-    //        Debug.LogError("Error: two FightManager instances.");
-    //        DestroyImmediate(gameObject);
-    //        return;
-    //    }
-    //    _instance = this;
-    //}
-
     public enum FightState
     {
         None,
@@ -42,17 +13,6 @@ public class FightManager : MonoBehaviour
         EnemyTurnResolution,
         FightVictoryScreen,
         GameOverScreen,
-    }
-
-    CreatureDefinitionsLibrary _creatureDefinitionsLibrary;
-    CreatureDefinitionsLibrary creatureDefinitionsLibrary
-    {
-        get
-        {
-            if (_creatureDefinitionsLibrary == null)
-                _creatureDefinitionsLibrary = GlobalGameManager.Instance.creatureDefinitionsLibrary;
-            return _creatureDefinitionsLibrary;
-        }
     }
 
     PlayGrid _grid;
@@ -101,6 +61,11 @@ public class FightManager : MonoBehaviour
         GlobalGameManager.OnNewGameState += OnNewGameState;
     }
 
+    private void OnDestroy()
+    {
+        GlobalGameManager.OnNewGameState -= OnNewGameState;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -136,11 +101,9 @@ public class FightManager : MonoBehaviour
     {
         GlobalGameManager.OnNotBusyAnymore += OnNotBusyAnymore;
 
-        CreatureDefinition mcDef = creatureDefinitionsLibrary.GetDefinition(CreatureType.MC);
-        allyCreatures.Add(GlobalGameManager.Instance.grid.SpawnFightCreature(mcDef, GlobalGameManager.Instance.grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
+        allyCreatures.Add(GlobalGameManager.Instance.grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, GlobalGameManager.Instance.grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
 
-        CreatureDefinition enemyDef = creatureDefinitionsLibrary.GetDefinition(CreatureType.Enemy1);
-        SpawnCreature(enemyDef, false);
+        SpawnCreature(CardDefinitionType.BaseEnemy, false);
 
         UpdateGridVisuals();
         CurrentFightState = FightState.PlayerTurnOperations;
@@ -282,19 +245,26 @@ public class FightManager : MonoBehaviour
         UpdateGridVisuals();
     }
 
-    void SpawnCreature(CreatureDefinition creatureDef, bool ally)
+    void SpawnCreature(CardDefinitionType creatureType, bool ally)
     {
+        Card creatureCard = new Card(creatureType);
+        if (creatureCard.cardDefinition.cardCategory != CardCategory.Creature)
+        {
+            Debug.LogError("Error: trying to spawn " + creatureType + " but it's not a creature.");
+            return;
+        }
+
         GridSpot spawnSpot = null;
         int remainingTries = 20;
-        while (spawnSpot == null && remainingTries > 0)
+        while ((spawnSpot == null || !creatureCard.IsValidTarget(spawnSpot)) && remainingTries > 0)
         {
             int x = UnityEngine.Random.Range(0, PlayGrid.size);
             int y = UnityEngine.Random.Range(0, PlayGrid.size);
-            spawnSpot = grid.GetSpot(x, y, true);
+            spawnSpot = grid.GetSpot(x, y);
         }
         if (spawnSpot != null)
         {
-            FightCreature newCreature = GlobalGameManager.Instance.grid.SpawnFightCreature(creatureDef, spawnSpot, ally);
+            FightCreature newCreature = GlobalGameManager.Instance.grid.SpawnFightCreature(creatureCard, spawnSpot, ally);
             if (ally)
             {
                 allyCreatures.Add(newCreature);
@@ -335,6 +305,7 @@ public class FightManager : MonoBehaviour
                 if (i <= currentStateElementIndex)
                     currentStateElementIndex--;
             }
+            GlobalGameManager.Instance.CoinsAmount += creature.coinsGain;
             enemyCreatures.RemoveAt(i);
             //if (enemyCreatures.Count == 0)
             //{

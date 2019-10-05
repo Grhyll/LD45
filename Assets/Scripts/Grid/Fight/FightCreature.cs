@@ -18,6 +18,8 @@ public class FightCreature : GridEntity
     public bool isAlly { get; private set; }
     public bool isMC { get; private set; }
 
+    public int coinsGain = 1;
+
     public GridSpot currentGridSpot { get; private set; }
     public int turnRemainingMoves { get; private set; }
 
@@ -31,20 +33,20 @@ public class FightCreature : GridEntity
     float currentAttackStartDate;
     const float attackDuration = 0.5f;
 
-    public void Init(CreatureDefinition creatureDefinition, GridSpot initialSpot, bool ally)
+    public void Init(Card creatureCard, GridSpot initialSpot, bool ally)
     {
-        health = creatureDefinition.baseHealth;
-        damage = creatureDefinition.baseDamage;
-        range = creatureDefinition.baseRange;
-        moves = creatureDefinition.baseMoves;
+        health = creatureCard.Health;
+        damage = creatureCard.Damage;
+        range = creatureCard.Range;
+        moves = creatureCard.Moves;
 
-        creatureImage.sprite = creatureDefinition.sprite;
+        creatureImage.sprite = creatureCard.cardDefinition.sprite;
         healthLabel.text = health.ToString();
         attackLabel.text = damage.ToString();
 
         isAlly = ally;
 
-        isMC = creatureDefinition.creatureType == CreatureType.MC;
+        isMC = creatureCard.cardDefinition.cardType == CardDefinitionType.MC;
 
         currentGridSpot = initialSpot;
     }

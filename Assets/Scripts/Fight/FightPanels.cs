@@ -12,6 +12,11 @@ public class FightPanels : MonoBehaviour
         FightManager.OnNewFightState += OnNewFightState;
     }
 
+    private void OnDestroy()
+    {
+        GlobalGameManager.OnNewGameState -= OnNewGameState;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

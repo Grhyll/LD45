@@ -58,14 +58,14 @@ public class PlayGrid : MonoBehaviour
     }
 
 
-    public FightCreature SpawnFightCreature(CreatureDefinition creatureDefinition, GridSpot spot, bool ally)
+    public FightCreature SpawnFightCreature(Card creatureCard, GridSpot spot, bool ally)
     {
         if (spot.IsFree())
         {
             GameObject newFightCreatureObject = Instantiate(fightCreatureModel.gameObject, fightCreatureModel.transform.parent);
             newFightCreatureObject.SetActive(true);
             FightCreature result = newFightCreatureObject.GetComponent<FightCreature>();
-            result.Init(creatureDefinition, spot, ally);
+            result.Init(creatureCard, spot, ally);
             newFightCreatureObject.transform.localPosition = spot.transform.localPosition;
             spot.OnEntityEnters(result);
             return result;
