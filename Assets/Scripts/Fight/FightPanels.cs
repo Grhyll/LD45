@@ -41,6 +41,6 @@ public class FightPanels : MonoBehaviour
 
     public void OnEndTurnButton()
     {
-        GlobalGameManager.Instance.fightManager.OnEndPlayerOperations();
+        FightManager.instance.OnEndPlayerOperations();
     }
 }

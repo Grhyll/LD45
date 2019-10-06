@@ -82,13 +82,13 @@ public class FightCardsUI : MonoBehaviour
         if (!showedCardIsSelected)
         {
             UnshowCard();
-            GlobalGameManager.Instance.fightManager.OnUnselectedHandCard();
+            FightManager.instance.OnUnselectedHandCard();
         }
         else
         {
             selectedCardRaycastBlocker.SetActive(true);
             Debug.Log("Play card!");
-            GlobalGameManager.Instance.fightManager.OnSelectedHandCard(cardUI.card);
+            FightManager.instance.OnSelectedHandCard(cardUI.card);
         }
     }
     public void OnSelectedCardRaycastBlocker()
@@ -115,7 +115,7 @@ public class FightCardsUI : MonoBehaviour
 
     void OnCardPilesChanged()
     {
-        List<Card> currentHand = GlobalGameManager.Instance.fightManager.hand;
+        List<Card> currentHand = FightManager.instance.hand;
         for (int i = 0; i < hand.Count; i++)
         {
             if (!currentHand.Contains(hand[i].card))
@@ -172,5 +172,6 @@ public class FightCardsUI : MonoBehaviour
             }
         }
         selectedCardRaycastBlocker.SetActive(false);
+        showedCardIsSelected = false;
     }
 }

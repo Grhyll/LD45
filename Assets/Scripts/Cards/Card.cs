@@ -24,6 +24,8 @@ public class Card : IGameElement
     public int Range { get { return cardDefinition.range; } }
     public int Moves { get { return cardDefinition.moves; } }
 
+    GridSpot castTarget;
+
     const string damageKey = "{damage}";
 
     public string GetDescription()
@@ -35,11 +37,51 @@ public class Card : IGameElement
 
     public void Cast(GridSpot spot)
     {
+        switch (cardDefinition.cardType)
+        {
+            case CardDefinitionType.Fireball:
+                castTarget = spot;
+                GlobalGameManager.Instance.OnBusyElement(this);
+                PlayGrid.Instance.gridFeedbackManager.FireProjectile(this, PlayGrid.Instance.mc, spot, OnFeedbackHit, OnFeedbackEnd);
+                break;
+
+
+            default:
+                Debug.LogError("Error: card type " + cardDefinition.cardType + " isn't handled in Cast method.");
+                break;
+        }
+    }
+    void OnFeedbackHit()
+    {
+        // Apply effect
+        switch (cardDefinition.cardType)
+        {
+            case CardDefinitionType.Fireball:
+                if (castTarget.gridEntity != null && castTarget.gridEntity is FightCreature)
+                {
+                    (castTarget.gridEntity as FightCreature).TakeDamage(Damage);
+                }
+                break;
+
+
+            default:
+                Debug.LogError("Error: card type " + cardDefinition.cardType + " isn't handled in OnFeedbackHit callback.");
+                break;
+        }
+    }
+    void OnFeedbackEnd()
+    {
+        if (castTarget.gridEntity != null && castTarget.gridEntity is FightCreature)
+        {
+            (castTarget.gridEntity as FightCreature).ProcessHealth();
+        }
+        castTarget = null;
+        FightManager.instance.OnCardCastEnded();
     }
 
     public bool IsBusy()
     {
-        return false;
+        return castTarget != null;
     }
 
     public bool IsValidTarget(GridSpot spot)

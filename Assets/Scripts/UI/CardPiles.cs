@@ -20,7 +20,7 @@ public class CardPiles : MonoBehaviour
 
     void OnCardPilesChanged()
     {
-        libraryLabel.text = "Pool: " + GlobalGameManager.Instance.fightManager.GetLibraryCount().ToString();
-        discardLabel.text = "Discarded: " + GlobalGameManager.Instance.fightManager.GetDiscardPileCount().ToString();
+        libraryLabel.text = "Pool: " + FightManager.instance.GetLibraryCount().ToString();
+        discardLabel.text = "Discarded: " + FightManager.instance.GetDiscardPileCount().ToString();
     }
 }

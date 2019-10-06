@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PlayGrid : MonoBehaviour
 {
+    public static PlayGrid Instance { get { return GlobalGameManager.Instance.grid; } }
+
+    public FeedbacksManager gridFeedbackManager;
+
     GridSpot[][] spots;
 
-    // Opti: pool that
+    // Opti: pool that (and so many other things...)
     FightCreature fightCreatureModel;
 
+    public FightCreature mc { get; private set; }
 
     public const int size = 11;
     const float margin = 10f;
@@ -49,6 +54,8 @@ public class PlayGrid : MonoBehaviour
         fightCreatureModel = GetComponentInChildren<FightCreature>();
         fightCreatureModel.transform.localScale = Vector3.one * spotScale;
         fightCreatureModel.gameObject.SetActive(false);
+
+        gridFeedbackManager.transform.localScale = Vector3.one * spotScale;
     }
 
     // Update is called once per frame
@@ -68,6 +75,8 @@ public class PlayGrid : MonoBehaviour
             result.Init(creatureCard, spot, ally);
             newFightCreatureObject.transform.localPosition = spot.transform.localPosition;
             spot.OnEntityEnters(result);
+            if (creatureCard.cardDefinition.cardType == CardDefinitionType.MC)
+                mc = result;
             return result;
         }
         else

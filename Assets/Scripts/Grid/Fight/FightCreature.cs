@@ -81,7 +81,7 @@ public class FightCreature : GridEntity
             }
             if (currentAttackProgress >= 1f)
             {
-                attackTargets[0].ProcessDamageTaken();
+                attackTargets[0].ProcessHealth();
                 attackTargets.RemoveAt(0);
                 while (attackTargets.Count > 0 && !attackTargets[0].CanBeTargeted())
                 {
@@ -96,13 +96,12 @@ public class FightCreature : GridEntity
         health = Mathf.Max(0, health - damage);
         healthLabel.text = health.ToString();
     }
-    public bool ProcessDamageTaken()    // Returns true if there's a feedback to play stopping the game
+    public void ProcessHealth() 
     {
         if (health <= 0)
         {
-            GlobalGameManager.Instance.fightManager.OnDeadCreature(this);
+            FightManager.instance.OnDeadCreature(this);
         }
-        return false;
     }
     public bool CanBeTargeted()
     {
@@ -125,7 +124,7 @@ public class FightCreature : GridEntity
     }
     public bool TryAndMoveAI(PlayGrid.MoveSet moveSet)
     {
-        FightCreature target = GlobalGameManager.Instance.fightManager.GetClosestOpponentCreature(this);
+        FightCreature target = FightManager.instance.GetClosestOpponentCreature(this);
         if (target != null)
         {
             GridSpot destination = moveSet.GetClosestSpot(target.currentGridSpot, turnRemainingMoves);
@@ -179,7 +178,7 @@ public class FightCreature : GridEntity
                             y += k - i + 1;
                             break;
                     }
-                    GridSpot spot = GlobalGameManager.Instance.grid.GetSpot(x, y);
+                    GridSpot spot = PlayGrid.Instance.GetSpot(x, y);
                     if (spot != null &&
                         spot.gridEntity != null && spot.gridEntity is FightCreature &&
                         (spot.gridEntity as FightCreature).isAlly != isAlly)
