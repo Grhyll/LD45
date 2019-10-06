@@ -2,14 +2,50 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class CardCategoryInfo
+{
+    public string name;
+    public CardCategory category;
+
+    public string displayName;
+    public Sprite sprite;
+
+    public CardCategoryInfo(CardCategory _category)
+    {
+        name = _category.ToString();
+        category = _category;
+    }
+}
+
 [CreateAssetMenu(fileName = "CardBaseDefinitionsLibrary", menuName = "LD45/Create card base definitions library")]
 public class CardBaseDefinitionLibrary : ScriptableObject
 {
+    public List<CardCategoryInfo> categoriesInfo = new List<CardCategoryInfo>();
     public List<CardBaseDefinition> cardDefinitions = new List<CardBaseDefinition>();
 
     private void OnEnable()
     {
-        List<CardBaseDefinition> newList = new List<CardBaseDefinition>();
+        List<CardCategoryInfo> newCategoriesInfoList = new List<CardCategoryInfo>();
+        foreach (int type in System.Enum.GetValues(typeof(CardCategory)))
+        {
+            bool found = false;
+            for (int i = 0; i < categoriesInfo.Count; i++)
+            {
+                if (((int)categoriesInfo[i].category) == type)
+                {
+                    newCategoriesInfoList.Add(categoriesInfo[i]);
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                newCategoriesInfoList.Add(new CardCategoryInfo((CardCategory)type));
+            }
+        }
+        categoriesInfo = newCategoriesInfoList;
+
+        List<CardBaseDefinition> newCardDefinitionsList = new List<CardBaseDefinition>();
         foreach (int type in System.Enum.GetValues(typeof(CardDefinitionType)))
         {
             bool found = false;
@@ -17,16 +53,29 @@ public class CardBaseDefinitionLibrary : ScriptableObject
             {
                 if (((int)cardDefinitions[i].cardType) == type)
                 {
-                    newList.Add(cardDefinitions[i]);
+                    newCardDefinitionsList.Add(cardDefinitions[i]);
                     found = true;
                 }
             }
             if (!found)
             {
-                newList.Add(new CardBaseDefinition((CardDefinitionType) type));
+                newCardDefinitionsList.Add(new CardBaseDefinition((CardDefinitionType)type));
             }
         }
-        cardDefinitions = newList;
+        cardDefinitions = newCardDefinitionsList;
+    }
+
+    public CardCategoryInfo GetCategoryInfo(CardCategory category)
+    {
+        for (int i = 0; i < categoriesInfo.Count; i++)
+        {
+            if (categoriesInfo[i].category == category)
+            {
+                return categoriesInfo[i];
+            }
+        }
+        Debug.LogError("Error: couldn't find category info for " + category + " in card definitions library.");
+        return null;
     }
 
     public CardBaseDefinition GetCardDefinition(CardDefinitionType cardType)

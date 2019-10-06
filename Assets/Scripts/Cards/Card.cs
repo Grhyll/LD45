@@ -17,10 +17,21 @@ public class Card : IGameElement
         cardDefinition = GlobalGameManager.Instance.cardBaseDefinitionsLibrary.GetCardDefinition(_cardDefinitionType);
     }
 
+    public int ManaCost { get { return cardDefinition.manaCost + manaCostBonus; } }
+
     public int Health { get { return cardDefinition.health; } }
     public int Damage { get { return cardDefinition.damage + damageBonus; } }
     public int Range { get { return cardDefinition.range; } }
     public int Moves { get { return cardDefinition.moves; } }
+
+    const string damageKey = "{damage}";
+
+    public string GetDescription()
+    {
+        string result = cardDefinition.description;
+        result = result.Replace(damageKey, Damage.ToString());
+        return result;
+    }
 
     public void Cast(GridSpot spot)
     {

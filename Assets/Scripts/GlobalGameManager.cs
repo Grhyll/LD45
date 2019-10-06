@@ -15,6 +15,7 @@ public class GlobalGameManager : MonoBehaviour
     //public CreatureDefinitionsLibrary creatureDefinitionsLibrary;
     public CardBaseDefinitionLibrary cardBaseDefinitionsLibrary;
 
+    public DeckBuildingManager deckBuildingManager;
     public GameObject busyRaycastBlocker;
 
     public FightManager fightManager { get; set; }
@@ -90,8 +91,10 @@ public class GlobalGameManager : MonoBehaviour
         grid = FindObjectOfType<PlayGrid>();
 
         mcCard = new Card(CardDefinitionType.MC);
+
         ownedCards = new List<Card>();
-        ownedCards.Add(mcCard);
+        for (int i = 0; i < 10; i++) 
+        ownedCards.Add(new Card(CardDefinitionType.Fireball));
     }
 
     // Update is called once per frame

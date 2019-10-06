@@ -40,7 +40,6 @@ public class FightManager : MonoBehaviour
                 currentStateElementIndex = 0;
                 _currentFightState = value;
                 OnNewFightState?.Invoke(_currentFightState);
-                Debug.Log("New fight state " + _currentFightState);
                 HandleNewFightState();
             }
         }
@@ -49,8 +48,30 @@ public class FightManager : MonoBehaviour
     List<FightCreature> allyCreatures = new List<FightCreature>();
     List<FightCreature> enemyCreatures = new List<FightCreature>();
 
-    FightCreature selectedFightCreature;
+    FightCreature selectedBoardFightCreature;
     PlayGrid.MoveSet selectedFightCreatureMoveSet = new PlayGrid.MoveSet();
+
+    Card selectedHandCard;
+
+    int _currentMana;
+    public int CurrentMana
+    {
+        get { return _currentMana; }
+        private set
+        {
+            if (_currentMana != value)
+            {
+                _currentMana = value;
+                OnNewCurrentMana?.Invoke(_currentMana);
+            }
+        }
+    }
+    public static Action<int> OnNewCurrentMana;
+
+    List<Card> library = new List<Card>();
+    public List<Card> hand { get; private set; } = new List<Card>();
+    List<Card> discardPile = new List<Card>();
+    public static Action OnCardPilesChanged;
 
     public static Action<FightState> OnNewFightState;
 
@@ -101,6 +122,14 @@ public class FightManager : MonoBehaviour
     {
         GlobalGameManager.OnNotBusyAnymore += OnNotBusyAnymore;
 
+        library.Clear();
+        hand.Clear();
+        discardPile.Clear();
+
+        library.AddRange(GlobalGameManager.Instance.ownedCards);
+        ShuffleLibrary();
+        OnCardPilesChanged?.Invoke();
+
         allyCreatures.Add(GlobalGameManager.Instance.grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, GlobalGameManager.Instance.grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
 
         SpawnCreature(CardDefinitionType.BaseEnemy, false);
@@ -137,6 +166,14 @@ public class FightManager : MonoBehaviour
 
     void OnStartPlayerTurn()
     {
+        CurrentMana = Mathf.Max(CurrentMana, GetMaxManaPerTurn());
+
+        while (hand.Count < GetHandMaxSize())
+        {
+            if (!DrawCard())
+                break;
+        }
+
         for (int i = 0; i < allyCreatures.Count; i++)
         {
             allyCreatures[i].OnNewTurn();
@@ -278,7 +315,7 @@ public class FightManager : MonoBehaviour
 
     public void OnDeadCreature(FightCreature creature)
     {
-        if (creature == selectedFightCreature)
+        if (creature == selectedBoardFightCreature)
         {
             UnselectSelectedFightCreature();
         }
@@ -337,24 +374,34 @@ public class FightManager : MonoBehaviour
 
     public void OnGridSpotClick(GridSpot spot)
     {
-        if (spot.gridEntity != selectedFightCreature)
+        if (selectedHandCard != null)
         {
-            if (selectedFightCreatureMoveSet.GetElement(spot) != null)
+            if (selectedHandCard.IsValidTarget(spot))
             {
-                selectedFightCreature.GoTo(spot, selectedFightCreatureMoveSet);
+                Debug.Log("Valid target, cast spell!");
             }
-            else
+        }
+        else
+        {
+            if (spot.gridEntity != selectedBoardFightCreature)
             {
-                SelectEntity(spot.gridEntity);
-            }
+                if (selectedFightCreatureMoveSet.GetElement(spot) != null)
+                {
+                    selectedBoardFightCreature.GoTo(spot, selectedFightCreatureMoveSet);
+                }
+                else
+                {
+                    SelectEntity(spot.gridEntity);
+                }
 
-            UpdateGridVisuals();
+                UpdateGridVisuals();
+            }
         }
     }
 
     public void SelectEntity(GridEntity gridEntity)
     {
-        if (selectedFightCreature != null)
+        if (selectedBoardFightCreature != null)
         {
             // The currently selected fight creature will be unselected
             selectedFightCreatureMoveSet.Clear();
@@ -365,7 +412,7 @@ public class FightManager : MonoBehaviour
         {
             if (gridEntity is FightCreature)
             {
-                selectedFightCreature = gridEntity as FightCreature;
+                selectedBoardFightCreature = gridEntity as FightCreature;
                 ProcessSelectedCreature();
             }
             else
@@ -379,16 +426,32 @@ public class FightManager : MonoBehaviour
     }
     void UnselectSelectedFightCreature()
     {
-        selectedFightCreature = null;
+        selectedBoardFightCreature = null;
+        selectedFightCreatureMoveSet.Clear();
+    }
+
+    public void OnSelectedHandCard(Card card)
+    {
+        if (selectedBoardFightCreature != null)
+        {
+            UnselectSelectedFightCreature();
+        }
+        selectedHandCard = card;
+        UpdateGridVisuals();
+    }
+    public void OnUnselectedHandCard()
+    {
+        selectedHandCard = null;
+        UpdateGridVisuals();
     }
 
     void ProcessSelectedCreature()
     {
-        if (selectedFightCreature != null)
+        if (selectedBoardFightCreature != null)
         {
-            if (selectedFightCreature.isAlly && CurrentFightState == FightState.PlayerTurnOperations)
+            if (selectedBoardFightCreature.isAlly && CurrentFightState == FightState.PlayerTurnOperations)
             {
-                grid.GetMoveSet(selectedFightCreature.currentGridSpot, selectedFightCreature.turnRemainingMoves, ref selectedFightCreatureMoveSet);
+                grid.GetMoveSet(selectedBoardFightCreature.currentGridSpot, selectedBoardFightCreature.turnRemainingMoves, ref selectedFightCreatureMoveSet);
             }
         }
     }
@@ -401,6 +464,10 @@ public class FightManager : MonoBehaviour
         if (selectedFightCreatureMoveSet.GetElement(spot, false) != null)
         {
             return GridSpot.GridSpotVisualState.MoveDestination;
+        }
+        if (selectedHandCard != null && selectedHandCard.IsValidTarget(spot))
+        {
+            return GridSpot.GridSpotVisualState.ValidTarget;
         }
         return 0;
     }
@@ -415,5 +482,59 @@ public class FightManager : MonoBehaviour
     void UpdateGridVisuals()
     {
         grid.UpdateAllSpotVisuals();
+    }
+
+    /* CARDS */
+
+    void ShuffleLibrary()
+    {
+        if (library.Count > 1)
+        {
+            for (int i = 0; i < library.Count * 2; i++)
+            {
+                int i1 = UnityEngine.Random.Range(0, library.Count);
+                int i2 = UnityEngine.Random.Range(0, library.Count);
+                while(i2 == i1)
+                    i2 = UnityEngine.Random.Range(0, library.Count);
+                Card c1 = library[i1];
+                library[i1] = library[i2];
+                library[i2] = c1;
+            }
+        }
+    }
+    bool DrawCard()
+    {
+        if (library.Count == 0)
+        {
+            if (discardPile.Count == 0)
+            {
+                return false;
+            }
+            library.AddRange(discardPile);
+            discardPile.Clear();
+            ShuffleLibrary();
+        }
+        hand.Add(library[0]);
+        library.RemoveAt(0);
+        OnCardPilesChanged?.Invoke();
+        return true;
+    }
+
+    public int GetLibraryCount()
+    {
+        return library.Count;
+    }
+    public int GetDiscardPileCount()
+    {
+        return discardPile.Count;
+    }
+
+    int GetHandMaxSize()
+    {
+        return 7;// 3;
+    }
+    int GetMaxManaPerTurn()
+    {
+        return 3;
     }
 }

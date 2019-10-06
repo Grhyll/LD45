@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df482aec092dfff42afaf36b3db8ef8d, type: 3}
   m_Name: CardBaseDefinitionsLibrary
   m_EditorClassIdentifier: 
+  categoriesInfo:
+  - name: Creature
+    category: 0
+    displayName: Creature
+    sprite: {fileID: 21300000, guid: de9bf467d8bcec747835abaa7f4566bb, type: 3}
+  - name: InstantSpell
+    category: 1
+    displayName: Spell
+    sprite: {fileID: 21300000, guid: c49f04a01019adb4180f0800757159c5, type: 3}
   cardDefinitions:
   - name: MC
     cardType: 0
@@ -19,6 +28,7 @@ MonoBehaviour:
     cardCategory: 0
     targettingType: 0
     sprite: {fileID: 21300000, guid: 1ef814b03e36a904fb82588f1bf5ba07, type: 3}
+    description: It's you.
     damage: 1
     manaCost: 0
     health: 5
@@ -30,6 +40,7 @@ MonoBehaviour:
     cardCategory: 0
     targettingType: 0
     sprite: {fileID: 21300000, guid: 29003074ca0e9054b906ccf7c30bdcbb, type: 3}
+    description: This little Coco isn't too scary.
     damage: 1
     manaCost: 0
     health: 1
@@ -40,7 +51,8 @@ MonoBehaviour:
     displayName: Fireball
     cardCategory: 1
     targettingType: 0
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 21a810f887f4fe84abd60d3bd2e8a6d5, type: 3}
+    description: Deals {damage} anywhere on the board.
     damage: 1
     manaCost: 1
     health: 0

@@ -42,6 +42,8 @@ public class CardBaseDefinition
 
     public Sprite sprite;
 
+    public string description;
+
     [Header("Generic")]
     public int damage = 0;
 

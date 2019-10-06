@@ -11,6 +11,7 @@ public class GridSpot : MonoBehaviour
         Enemy = 1 << 1,
         AllyRemainingMove = 1 << 2,
         AllyNoRemainingMove = 1 << 3,
+        ValidTarget = 1 << 4,
     }
 
     public Image spotBg;
@@ -18,6 +19,7 @@ public class GridSpot : MonoBehaviour
     public Image enemyBg;
     public Image allyRemainingMoveBg;
     public Image allyNoRemainingMoveBg;
+    public Image validTarget;
 
     public int CoordX { get; private set; }
     public int CoordY { get; private set; }
@@ -81,5 +83,6 @@ public class GridSpot : MonoBehaviour
         enemyBg.gameObject.SetActive((visualState & GridSpotVisualState.Enemy) != 0);
         allyRemainingMoveBg.gameObject.SetActive((visualState & GridSpotVisualState.AllyRemainingMove) != 0);
         allyNoRemainingMoveBg.gameObject.SetActive((visualState & GridSpotVisualState.AllyNoRemainingMove) != 0);
+        validTarget.gameObject.SetActive((visualState & GridSpotVisualState.ValidTarget) != 0);
     }
 }

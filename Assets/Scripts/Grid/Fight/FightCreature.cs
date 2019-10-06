@@ -23,6 +23,8 @@ public class FightCreature : GridEntity
     public GridSpot currentGridSpot { get; private set; }
     public int turnRemainingMoves { get; private set; }
 
+    public Card card { get; set; }
+
     List<GridSpot> currentPath = new List<GridSpot>();
 
     List<FightCreature> attackTargets = new List<FightCreature>();
@@ -47,6 +49,8 @@ public class FightCreature : GridEntity
         isAlly = ally;
 
         isMC = creatureCard.cardDefinition.cardType == CardDefinitionType.MC;
+
+        card = creatureCard;
 
         currentGridSpot = initialSpot;
     }
