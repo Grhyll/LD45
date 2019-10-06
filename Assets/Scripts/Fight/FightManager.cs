@@ -139,8 +139,70 @@ public class FightManager : MonoBehaviour
         //allyCreatures.Add(grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
         SpawnCreature(GlobalGameManager.Instance.mcCard, true, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2));
 
-        for (int i = 0; i < GlobalGameManager.Instance.currentTurn * 2; i++)
-            SpawnCreature(new Card(CardDefinitionType.BaseEnemy), false);
+        int currentTurn = GlobalGameManager.Instance.currentTurn;
+        List<CardDefinitionType> creaturesToSpawn = new List<CardDefinitionType>();
+        for (int i = 0; i < Mathf.Min(4, currentTurn * 2); i++)
+            creaturesToSpawn.Add(CardDefinitionType.BaseEnemy);
+        if (currentTurn >= 3)
+        {
+            for (int i = 0; i < Mathf.Min(3, (currentTurn - 3) / 2 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.BaseEnemy2);
+            }
+        }
+        if (currentTurn >= 4)
+        {
+            for (int i = 0; i < Mathf.Min(4, (currentTurn - 4) / 3 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Quipyx);
+            }
+        }
+        if (currentTurn >= 5)
+        {
+            for (int i = 0; i < Mathf.Min(2, (currentTurn - 5) / 4 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.BaseEnemy3);
+            }
+        }
+        if (currentTurn >= 6)
+        {
+            for (int i = 0; i < Mathf.Min(3, (currentTurn - 6) / 4 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Lapinou);
+            }
+        }
+        if (currentTurn >= 7)
+        {
+            for (int i = 0; i < Mathf.Min(2, (currentTurn - 7) / 5 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Quipyx2);
+            }
+        }
+        if (currentTurn >= 9)
+        {
+            for (int i = 0; i < Mathf.Min(2, (currentTurn - 9) / 5 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Lapinou2);
+            }
+        }
+        if (currentTurn >= 11)
+        {
+            for (int i = 0; i < Mathf.Min(10, (currentTurn - 11) / 3 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Quipyx3);
+            }
+        }
+        if (currentTurn >= 15)
+        {
+            for (int i = 0; i < Mathf.Min(100, (currentTurn - 15) / 2 + 1); i++)
+            {
+                creaturesToSpawn.Add(CardDefinitionType.Lapinou3);
+            }
+        }
+        for (int i = 0; i < creaturesToSpawn.Count; i++)
+        {
+            SpawnCreature(new Card(creaturesToSpawn[i]), false);
+        }
 
         UpdateGridVisuals();
         CurrentFightState = FightState.PlayerTurnOperations;
@@ -307,6 +369,7 @@ public class FightManager : MonoBehaviour
             int x = UnityEngine.Random.Range(0, PlayGrid.size);
             int y = UnityEngine.Random.Range(0, PlayGrid.size);
             spawnSpot = grid.GetSpot(x, y);
+            remainingTries--;
         }
         if (spawnSpot != null)
         {

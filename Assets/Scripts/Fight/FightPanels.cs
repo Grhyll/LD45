@@ -70,6 +70,7 @@ public class FightPanels : MonoBehaviour
         if (selectedCardDescription.activeSelf && currentlyShownFightCreature != null)
         {
             string description = currentlyShownFightCreature.card.cardDefinition.displayName
+                + "\n" + currentlyShownFightCreature.card.cardDefinition.description 
                 + "\nAttack: " + currentlyShownFightCreature.damage
                 + "\nHealth: " + currentlyShownFightCreature.health
                 + "\nRange: " + currentlyShownFightCreature.range

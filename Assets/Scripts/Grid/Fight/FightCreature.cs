@@ -41,6 +41,10 @@ public class FightCreature : GridEntity
         moves = creatureCard.Moves;
 
         creatureImage.sprite = creatureCard.cardDefinition.sprite;
+        float spriteScale = creatureCard.cardDefinition.scale;
+        if (spriteScale < 0.1f)
+            spriteScale = 1f;
+        creatureImage.transform.localScale = Vector3.one * creatureImage.transform.localScale.x * spriteScale;
         healthLabel.text = health.ToString();
         attackLabel.text = damage.ToString();
 
@@ -172,14 +176,17 @@ public class FightCreature : GridEntity
     }
     public bool TryAndMoveAI(PlayGrid.MoveSet moveSet)
     {
-        FightCreature target = FightManager.instance.GetClosestOpponentCreature(this);
-        if (target != null)
+        if (turnRemainingMoves > 0)
         {
-            GridSpot destination = moveSet.GetClosestSpot(target.currentGridSpot, turnRemainingMoves);
-            if (destination != currentGridSpot)
+            FightCreature target = FightManager.instance.GetClosestOpponentCreature(this);
+            if (target != null)
             {
-                GoTo(destination, moveSet);
-                return true;
+                GridSpot destination = moveSet.GetClosestSpot(target.currentGridSpot, turnRemainingMoves);
+                if (destination != currentGridSpot)
+                {
+                    GoTo(destination, moveSet);
+                    return true;
+                }
             }
         }
         return false;

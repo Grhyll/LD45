@@ -18,6 +18,14 @@ public enum CardDefinitionType
     
     // Enemies
     BaseEnemy = 100,
+    BaseEnemy2 = 101, 
+    BaseEnemy3 = 102,
+    Quipyx = 105,
+    Quipyx2 = 106,
+    Quipyx3 = 107,
+    Lapinou = 110,
+    Lapinou2 = 111,
+    Lapinou3 = 112,
 
     // Instant spells
     Fireball = 1000,
@@ -52,6 +60,7 @@ public class CardBaseDefinition
     public string description;
 
     [Header("Generic")]
+    public float scale = 1f;
     public int damage = 0;
 
     [Header("Player playable cards.")]

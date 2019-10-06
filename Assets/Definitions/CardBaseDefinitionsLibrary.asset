@@ -49,6 +49,7 @@ MonoBehaviour:
     targettingType: 0
     sprite: {fileID: 21300000, guid: 1ef814b03e36a904fb82588f1bf5ba07, type: 3}
     description: It's you.
+    scale: 1
     damage: 1
     manaCost: 0
     goldReward: 0
@@ -62,12 +63,125 @@ MonoBehaviour:
     targettingType: 1
     sprite: {fileID: 21300000, guid: 29003074ca0e9054b906ccf7c30bdcbb, type: 3}
     description: This little Coco isn't too scary.
+    scale: 0.5
     damage: 1
     manaCost: 0
     goldReward: 1
     health: 1
     range: 1
     moves: 2
+  - name: BaseEnemy2
+    cardType: 101
+    displayName: Coco's Brother
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: 29003074ca0e9054b906ccf7c30bdcbb, type: 3}
+    description: This little Coco's Brother is barely scarier.
+    scale: 0.7
+    damage: 1
+    manaCost: 0
+    goldReward: 1
+    health: 2
+    range: 1
+    moves: 1
+  - name: BaseEnemy3
+    cardType: 102
+    displayName: Coco's Big Brother
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: 29003074ca0e9054b906ccf7c30bdcbb, type: 3}
+    description: Ok, this one's bigger.
+    scale: 1
+    damage: 2
+    manaCost: 0
+    goldReward: 2
+    health: 3
+    range: 1
+    moves: 1
+  - name: Quipyx
+    cardType: 105
+    displayName: Quipyx
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: cea2cec5b5883d0428730cc67b108a95, type: 3}
+    description: Kinda looks like a hedgehog. Don't get too close.
+    scale: 0.5
+    damage: 1
+    manaCost: 0
+    goldReward: 2
+    health: 2
+    range: 2
+    moves: 0
+  - name: Quipyx2
+    cardType: 106
+    displayName: Quipyxx
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: cea2cec5b5883d0428730cc67b108a95, type: 3}
+    description: Sounds like trouble.
+    scale: 0.7
+    damage: 2
+    manaCost: 0
+    goldReward: 3
+    health: 4
+    range: 2
+    moves: 1
+  - name: Quipyx3
+    cardType: 107
+    displayName: Quipyxxx
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: cea2cec5b5883d0428730cc67b108a95, type: 3}
+    description: Damn it's getting dangerous.
+    scale: 1
+    damage: 2
+    manaCost: 0
+    goldReward: 4
+    health: 5
+    range: 3
+    moves: 2
+  - name: Lapinou
+    cardType: 110
+    displayName: Furball
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: 468529b414b816c4c8383df606d23656, type: 3}
+    description: SO CUTE.
+    scale: 0.5
+    damage: 2
+    manaCost: 0
+    goldReward: 2
+    health: 2
+    range: 1
+    moves: 4
+  - name: Lapinou2
+    cardType: 111
+    displayName: Furmass
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: 468529b414b816c4c8383df606d23656, type: 3}
+    description: UH. STILL SO CUTE.
+    scale: 0.7
+    damage: 3
+    manaCost: 0
+    goldReward: 4
+    health: 5
+    range: 1
+    moves: 5
+  - name: Lapinou3
+    cardType: 112
+    displayName: FURARMAGGEDON
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: 468529b414b816c4c8383df606d23656, type: 3}
+    description: NAH. NOPE. I'M OUT.
+    scale: 1
+    damage: 5
+    manaCost: 0
+    goldReward: 10
+    health: 10
+    range: 2
+    moves: 6
   - name: Fireball
     cardType: 1000
     displayName: Fireball
@@ -75,6 +189,7 @@ MonoBehaviour:
     targettingType: 0
     sprite: {fileID: 21300000, guid: 21a810f887f4fe84abd60d3bd2e8a6d5, type: 3}
     description: Deals {damage} damages anywhere on the board.
+    scale: 0
     damage: 3
     manaCost: 1
     goldReward: 0
@@ -88,6 +203,7 @@ MonoBehaviour:
     targettingType: 1
     sprite: {fileID: 21300000, guid: ee1363a6ef919ea4c9c839fe2fa2d7ba, type: 3}
     description: A tiny gentle minion
+    scale: 0
     damage: 1
     manaCost: 1
     goldReward: 1
@@ -101,6 +217,7 @@ MonoBehaviour:
     targettingType: 1
     sprite: {fileID: 21300000, guid: c2f6c66e4da7cdf4684917308d8e25a4, type: 3}
     description: A slightly bigger minion
+    scale: 0
     damage: 2
     manaCost: 2
     goldReward: 1
@@ -114,6 +231,7 @@ MonoBehaviour:
     targettingType: 0
     sprite: {fileID: 0}
     description: 
+    scale: 0
     damage: 0
     manaCost: 1
     goldReward: 1
