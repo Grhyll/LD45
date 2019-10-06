@@ -76,6 +76,11 @@ public class GridSpot : MonoBehaviour
         GridSpotVisualState visualState = GlobalGameManager.Instance.GetGridSpotVisualState(this) | (gridEntity != null ? gridEntity.GetSpotVisualStateMask() : 0);
         UpdateVisuals(visualState);
     }
+    public void Clear()
+    {
+        gridEntity = null;
+        UpdateVisuals(0);
+    }
 
     void UpdateVisuals(GridSpotVisualState visualState)
     {

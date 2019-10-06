@@ -9,7 +9,7 @@ public class GlobalGameManager : MonoBehaviour
         None, 
         Fight, 
         Match3, 
-        CardBuilding,
+        Deckbuilding,
     }
 
     //public CreatureDefinitionsLibrary creatureDefinitionsLibrary;
@@ -20,6 +20,8 @@ public class GlobalGameManager : MonoBehaviour
 
     public FightManager fightManager { get; set; }
     public PlayGrid grid { get; set; }
+
+    public int currentTurn { get; private set; } = 0;
 
     public List<Card> ownedCards { get; set; }
     public Card mcCard;
@@ -103,7 +105,7 @@ public class GlobalGameManager : MonoBehaviour
         if (CurrentGameState == GameState.None)
         {
             busyRaycastBlocker.SetActive(false);
-            CurrentGameState = GameState.Fight;
+            StartFight();
         }
 
         if (IsBusy())
@@ -122,6 +124,16 @@ public class GlobalGameManager : MonoBehaviour
                 busyRaycastBlocker.SetActive(false);
             }
         }
+    }
+
+    public void OnFightVictoryScreenEnded()
+    {
+        CurrentGameState = GameState.Deckbuilding;
+    }
+    public void StartFight()
+    {
+        currentTurn++;
+        CurrentGameState = GameState.Fight;
     }
 
     // If this wasn't a game jam, this function would definitely not be there

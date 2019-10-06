@@ -78,6 +78,12 @@ public class FightCardsUI : MonoBehaviour
             UnshowCard();
             ShowCard(cardUI);
         }
+        if (!showedCardIsSelected && FightManager.instance.CurrentMana < cardUI.card.ManaCost)
+        {
+            FightManager.OnNotEnoughMana?.Invoke();
+            return;
+        }
+
         showedCardIsSelected = !showedCardIsSelected;
         if (!showedCardIsSelected)
         {
@@ -87,7 +93,6 @@ public class FightCardsUI : MonoBehaviour
         else
         {
             selectedCardRaycastBlocker.SetActive(true);
-            Debug.Log("Play card!");
             FightManager.instance.OnSelectedHandCard(cardUI.card);
         }
     }

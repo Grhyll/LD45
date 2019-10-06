@@ -72,6 +72,7 @@ public class FightManager : MonoBehaviour
         }
     }
     public static Action<int> OnNewCurrentMana;
+    public static Action OnNotEnoughMana;
 
     List<Card> library = new List<Card>();
     public List<Card> hand { get; private set; } = new List<Card>();
@@ -137,7 +138,7 @@ public class FightManager : MonoBehaviour
 
         allyCreatures.Add(grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
 
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < GlobalGameManager.Instance.currentTurn * 2; i++)
             SpawnCreature(CardDefinitionType.BaseEnemy, false);
 
         UpdateGridVisuals();
@@ -147,6 +148,17 @@ public class FightManager : MonoBehaviour
     void EndFight()
     {
         GlobalGameManager.OnNotBusyAnymore -= OnNotBusyAnymore;
+        for (int i = 0; i < allyCreatures.Count; i++)
+        {
+            Destroy(allyCreatures[i].gameObject);
+        }
+        for (int i = 0; i < enemyCreatures.Count; i++)
+        {
+            Destroy(enemyCreatures[i].gameObject);
+        }
+        allyCreatures.Clear();
+        enemyCreatures.Clear();
+        grid.Clear();
     }
 
     void HandleNewFightState()
@@ -160,8 +172,7 @@ public class FightManager : MonoBehaviour
                 OnStartEnemyTurn();
                 break;
             case FightState.FightVictoryScreen:
-                //TODO
-                Debug.Log("FIGHT VICTORY");
+                // Handled by FightVictoryScreen
                 break;
             case FightState.GameOverScreen:
                 //TODO
@@ -212,10 +223,6 @@ public class FightManager : MonoBehaviour
                 {
                     CurrentFightState = FightState.EnemyTurnMove;
                 }
-                else
-                {
-                    CurrentFightState = FightState.FightVictoryScreen;
-                }
             }
             else
             {
@@ -238,10 +245,6 @@ public class FightManager : MonoBehaviour
                 if (enemyCreatures.Count > 0)
                 {
                     CurrentFightState = FightState.EnemyTurnResolution;
-                }
-                else
-                {
-                    CurrentFightState = FightState.FightVictoryScreen;
                 }
             }
             else
@@ -273,10 +276,6 @@ public class FightManager : MonoBehaviour
                 if (enemyCreatures.Count > 0)
                 {
                     CurrentFightState = FightState.PlayerTurnOperations;
-                }
-                else
-                {
-                    CurrentFightState = FightState.FightVictoryScreen;
                 }
             }
             else
@@ -355,11 +354,10 @@ public class FightManager : MonoBehaviour
             }
             GlobalGameManager.Instance.CoinsAmount += creature.coinsGain;
             enemyCreatures.RemoveAt(i);
-            //if (enemyCreatures.Count == 0)
-            //{
-            //    //TODO
-            //    Debug.Log("FIGHT VICTORY");
-            //}
+            if (enemyCreatures.Count == 0)
+            {
+                CurrentFightState = FightState.FightVictoryScreen;
+            }
         }
         creature.currentGridSpot.OnEntityLeave(creature);
         Destroy(creature.gameObject);
@@ -389,7 +387,7 @@ public class FightManager : MonoBehaviour
         {
             if (selectedHandCard.IsValidTarget(spot))
             {
-                Debug.Log("Valid target, cast spell!");
+                CurrentMana = Mathf.Max(0, CurrentMana - selectedHandCard.ManaCost);
                 selectedHandCard.Cast(spot);
 
                 UpdateGridVisuals();

@@ -83,9 +83,13 @@ public class FightCreature : GridEntity
             {
                 attackTargets[0].ProcessHealth();
                 attackTargets.RemoveAt(0);
-                while (attackTargets.Count > 0 && !attackTargets[0].CanBeTargeted())
+                while (attackTargets.Count > 0 && (attackTargets[0] == null || !attackTargets[0].CanBeTargeted()))
                 {
                     attackTargets.RemoveAt(0);
+                }
+                if (attackTargets.Count > 0)
+                {
+                    StartNextAttack();
                 }
             }
         }

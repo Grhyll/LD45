@@ -27,7 +27,6 @@ public class CardFeedbackHandler : MonoBehaviour
     protected void InitElements(CardDefinitionType cardType)
     {
         GetElements();
-        Debug.Log("Init elements of projectile, " + elements.Length + " elements.");
         for (int i = 0; i < elements.Length; i++)
         {
             elements[i].UpdateForCard(cardType);

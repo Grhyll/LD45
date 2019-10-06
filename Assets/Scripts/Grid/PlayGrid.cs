@@ -111,6 +111,16 @@ public class PlayGrid : MonoBehaviour
             }
         }
     }
+    public void Clear()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                spots[i][j].Clear();
+            }
+        }
+    }
 
 
 
