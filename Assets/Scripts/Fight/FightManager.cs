@@ -171,13 +171,12 @@ public class FightManager : MonoBehaviour
             case FightState.EnemyTurnMove:
                 OnStartEnemyTurn();
                 break;
-            case FightState.FightVictoryScreen:
-                // Handled by FightVictoryScreen
-                break;
-            case FightState.GameOverScreen:
-                //TODO
-                Debug.Log("GAME OVER");
-                break;
+            //case FightState.FightVictoryScreen:
+            //    // Handled by FightVictoryScreen
+            //    break;
+            //case FightState.GameOverScreen:
+            //    // Handled by GameOverScreen
+            //    break;
         }
     }
 
