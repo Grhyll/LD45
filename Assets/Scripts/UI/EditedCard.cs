@@ -31,4 +31,9 @@ public class EditedCard : MonoBehaviour
         gameObject.SetActive(false);
         GlobalGameManager.Instance.deckBuildingManager.OnClosedEditedCard();
     }
+
+    public void Close()
+    {
+        OnBackgroundClick();
+    }
 }

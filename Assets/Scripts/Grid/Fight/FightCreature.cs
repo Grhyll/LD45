@@ -51,6 +51,8 @@ public class FightCreature : GridEntity
         card = creatureCard;
 
         currentGridSpot = initialSpot;
+
+        turnRemainingMoves = moves;
     }
 
     // Update is called once per frame

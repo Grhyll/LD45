@@ -78,6 +78,8 @@ public class GridSpot : MonoBehaviour
     }
     public void Clear()
     {
+        if (gridEntity != null)
+            Destroy(gridEntity.gameObject);
         gridEntity = null;
         UpdateVisuals(0);
     }

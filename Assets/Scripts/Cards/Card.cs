@@ -42,19 +42,29 @@ public class Card : IGameElement
 
     public void Cast(GridSpot spot)
     {
-        switch (cardDefinition.cardType)
+        switch (cardDefinition.cardCategory)
         {
-            case CardDefinitionType.Fireball:
-                castTarget = spot;
-                GlobalGameManager.Instance.OnBusyElement(this);
-                PlayGrid.Instance.gridFeedbackManager.FireProjectile(this, PlayGrid.Instance.mc, spot, OnFeedbackHit, OnFeedbackEnd);
+            case CardCategory.Creature:
+                FightManager.instance.SpawnCreature(this, true, spot);
+                OnCardFinishedCasting();
                 break;
 
+            case CardCategory.InstantSpell:
+                switch (cardDefinition.cardType)
+                {
+                    case CardDefinitionType.Fireball:
+                        castTarget = spot;
+                        GlobalGameManager.Instance.OnBusyElement(this);
+                        PlayGrid.Instance.gridFeedbackManager.FireProjectile(this, PlayGrid.Instance.mc, spot, OnFeedbackHit, OnCardFinishedCasting);
+                        break;
 
-            default:
-                Debug.LogError("Error: card type " + cardDefinition.cardType + " isn't handled in Cast method.");
+
+                    default:
+                        Debug.LogError("Error: card type " + cardDefinition.cardType + " isn't handled in Cast method.");
+                        break;
+                }
                 break;
-        }
+    }
     }
     void OnFeedbackHit()
     {
@@ -74,7 +84,7 @@ public class Card : IGameElement
                 break;
         }
     }
-    void OnFeedbackEnd()
+    void OnCardFinishedCasting()
     {
         if (castTarget.gridEntity != null && castTarget.gridEntity is FightCreature)
         {

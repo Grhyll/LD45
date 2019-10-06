@@ -136,10 +136,11 @@ public class FightManager : MonoBehaviour
         ShuffleLibrary();
         OnCardPilesChanged?.Invoke();
 
-        allyCreatures.Add(grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
+        //allyCreatures.Add(grid.SpawnFightCreature(GlobalGameManager.Instance.mcCard, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2), true));
+        SpawnCreature(GlobalGameManager.Instance.mcCard, true, grid.GetSpot(PlayGrid.size / 2, PlayGrid.size / 2));
 
-        for(int i = 0; i < GlobalGameManager.Instance.currentTurn * 2; i++)
-            SpawnCreature(CardDefinitionType.BaseEnemy, false);
+        for (int i = 0; i < GlobalGameManager.Instance.currentTurn * 2; i++)
+            SpawnCreature(new Card(CardDefinitionType.BaseEnemy), false);
 
         UpdateGridVisuals();
         CurrentFightState = FightState.PlayerTurnOperations;
@@ -148,14 +149,14 @@ public class FightManager : MonoBehaviour
     void EndFight()
     {
         GlobalGameManager.OnNotBusyAnymore -= OnNotBusyAnymore;
-        for (int i = 0; i < allyCreatures.Count; i++)
-        {
-            Destroy(allyCreatures[i].gameObject);
-        }
-        for (int i = 0; i < enemyCreatures.Count; i++)
-        {
-            Destroy(enemyCreatures[i].gameObject);
-        }
+        //for (int i = 0; i < allyCreatures.Count; i++)
+        //{
+        //    Destroy(allyCreatures[i].gameObject);
+        //}
+        //for (int i = 0; i < enemyCreatures.Count; i++)
+        //{
+        //    Destroy(enemyCreatures[i].gameObject);
+        //}
         allyCreatures.Clear();
         enemyCreatures.Clear();
         grid.Clear();
@@ -291,16 +292,15 @@ public class FightManager : MonoBehaviour
         UpdateGridVisuals();
     }
 
-    void SpawnCreature(CardDefinitionType creatureType, bool ally)
+    public void SpawnCreature(Card creatureCard, bool ally, GridSpot initialSpot = null)
     {
-        Card creatureCard = new Card(creatureType);
         if (creatureCard.cardDefinition.cardCategory != CardCategory.Creature)
         {
-            Debug.LogError("Error: trying to spawn " + creatureType + " but it's not a creature.");
+            Debug.LogError("Error: trying to spawn " + creatureCard.cardDefinition.cardType + " but it's not a creature.");
             return;
         }
 
-        GridSpot spawnSpot = null;
+        GridSpot spawnSpot = initialSpot;
         int remainingTries = 20;
         while ((spawnSpot == null || !creatureCard.IsValidTarget(spawnSpot)) && remainingTries > 0)
         {

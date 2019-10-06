@@ -32,6 +32,8 @@ public class DeckbuildingUI : MonoBehaviour
 
     public void OnStartFightButton()
     {
+        PlayGrid.Instance.Clear();
+        GlobalGameManager.Instance.deckBuildingManager.editedCard.Close();
         GlobalGameManager.Instance.StartFight();
     }
 }
