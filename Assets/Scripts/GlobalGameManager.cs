@@ -18,6 +18,10 @@ public class GlobalGameManager : MonoBehaviour
     public PickupCollection pickupCollection;
     public DeckBuildingManager deckBuildingManager;
     public GameObject busyRaycastBlocker;
+    public TutoManager tutoManager;
+    public FightPanels fightPanels;
+
+    public TMPro.TextMeshProUGUI gridTitle;
 
     public FightManager fightManager { get; set; }
     public PlayGrid grid { get; set; }
@@ -106,13 +110,13 @@ public class GlobalGameManager : MonoBehaviour
         ////////// TESTS
         //for (int i = 0; i < 10; i++) 
         //    ownedCards.Add(new Card(CardDefinitionType.Fireball));
-        for (int i = 0; i < 4; i++)
-            pickupCollection.EarnPickup(new PickupEffectDefinition(PickupEffect.Damage));
-        for (int i = 0; i < 4; i++)
-            pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.Creature));
-        for (int i = 0; i < 4; i++)
-            pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.InstantSpell));
-        CoinsAmount = 10;
+        //for (int i = 0; i < 4; i++)
+        //    pickupCollection.EarnPickup(new PickupEffectDefinition(PickupEffect.Damage));
+        //for (int i = 0; i < 4; i++)
+        //    pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.Creature));
+        //for (int i = 0; i < 4; i++)
+        //    pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.InstantSpell));
+        //CoinsAmount = 10;
     }
 
     // Update is called once per frame
@@ -121,9 +125,8 @@ public class GlobalGameManager : MonoBehaviour
         if (CurrentGameState == GameState.None)
         {
             busyRaycastBlocker.SetActive(false);
-            //TODO: restore
-            //StartFight();
-            ShowCollection();
+            StartFight();
+            tutoManager.OnTutoEvent(TutoManager.TutoStep.Intro);
         }
 
         if (IsBusy())
@@ -147,6 +150,8 @@ public class GlobalGameManager : MonoBehaviour
     {
         currentTurn++;
         CurrentGameState = GameState.Fight;
+        gridTitle.text = "FIGHT";
+        tutoManager.OnTutoEvent(TutoManager.TutoStep.FightWithCards);
     }
 
     public void OnFightVictoryScreenEnded()
@@ -158,6 +163,8 @@ public class GlobalGameManager : MonoBehaviour
     {
         CurrentGameState = GameState.Deckbuilding;
         grid.PopulateWithCards();
+        GlobalGameManager.Instance.tutoManager.OnTutoEvent(TutoManager.TutoStep.ToCardCrafting);
+        gridTitle.text = "CARDS COLLECTION";
     }
 
     // If this wasn't a game jam, this function would definitely not be there
@@ -190,6 +197,7 @@ public class GlobalGameManager : MonoBehaviour
         {
             knownCards.Add(card.cardDefinition.cardType);
         }
+        tutoManager.OnTutoEvent(TutoManager.TutoStep.CardCrafted);
     }
 
     public bool DoesPlayerKnowCard(CardDefinitionType type)

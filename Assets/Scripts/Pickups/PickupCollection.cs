@@ -27,6 +27,7 @@ public class PickupCollection : MonoBehaviour
     const int maxPickupsAmount = 12;
 
     CreateCardUI createCardUI { get { return GlobalGameManager.Instance.deckBuildingManager.deckbuildingUI.createCardUI; } }
+    ImprovingCardUI improvingCardUI { get { return GlobalGameManager.Instance.deckBuildingManager.deckbuildingUI.improvingCardUI; } }
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,11 @@ public class PickupCollection : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public int GetCurrentPickupsAmount()
+    {
+        return pickups.Count;
     }
 
     public void OnNewState(CollectionState newState)
@@ -69,6 +75,7 @@ public class PickupCollection : MonoBehaviour
     public void OnPickupConsumed(PickupUI pickup)
     {
         pickups.Remove(pickup);
+        Destroy(pickup.gameObject);
         Reorganize();
     }
 
@@ -87,6 +94,20 @@ public class PickupCollection : MonoBehaviour
                 for (int i = 0; i < pickups.Count; i++)
                 {
                     if (createCardUI.CanSelectPickup(pickups[i].pickupDefinition))
+                    {
+                        pickups[i].EnableSelection();
+                    }
+                    else
+                    {
+                        pickups[i].DisableSelection();
+                    }
+                }
+                break;
+
+            case CollectionState.Improving:
+                for (int i = 0; i < pickups.Count; i++)
+                {
+                    if (improvingCardUI.CanSelectPickup(pickups[i]))
                     {
                         pickups[i].EnableSelection();
                     }
@@ -131,6 +152,10 @@ public class PickupCollection : MonoBehaviour
 
             case CollectionState.Creating:
                 createCardUI.OnSelectedPickup(pickup);
+                break;
+
+            case CollectionState.Improving:
+                improvingCardUI.OnSelectedPickup(pickup);
                 break;
         }
     }

@@ -98,22 +98,45 @@ public class FightCreature : GridEntity
     public void ReapReward()
     {
         GlobalGameManager.Instance.CoinsAmount += card.cardDefinition.goldReward;
-        PickupDefinition earnedPickup;
-        if (Random.Range(0f, 1f) < 0.3f)
+        PickupDefinition earnedPickup = null;
+        if (GlobalGameManager.Instance.tutoManager.CurrentTutoStep == TutoManager.TutoStep.ToCardCrafting &&
+            GlobalGameManager.Instance.pickupCollection.GetCurrentPickupsAmount() == 0)
         {
-            System.Array categories = System.Enum.GetValues(typeof(CardCategory));
-            int categoriesAmount = categories.Length;
-            CardCategory category = (CardCategory)categories.GetValue(Random.Range(0, categoriesAmount));
-            earnedPickup = new PickupCategoryDefinition(category);
+            earnedPickup = new PickupCategoryDefinition(CardCategory.Creature);
         }
         else
         {
-            System.Array effects = System.Enum.GetValues(typeof(PickupEffect));
-            int effectsAmount = effects.Length;
-            PickupEffect effect = (PickupEffect)effects.GetValue(Random.Range(0, effectsAmount));
-            earnedPickup = new PickupEffectDefinition(effect);
+            for (int i = 0; i < 3; i++)
+            {
+                if (Random.Range(0f, 1f) < 0.6f)
+                {
+                    if (Random.Range(0f, 1f) < 0.3f)
+                    {
+                        System.Array categories = System.Enum.GetValues(typeof(CardCategory));
+                        int categoriesAmount = categories.Length;
+                        CardCategory category = CardCategory.None;
+                        while (category == CardCategory.None)
+                        {
+                            category = (CardCategory)categories.GetValue(Random.Range(0, categoriesAmount));
+                        }
+                        earnedPickup = new PickupCategoryDefinition(category);
+                    }
+                    else
+                    {
+                        System.Array effects = System.Enum.GetValues(typeof(PickupEffect));
+                        int effectsAmount = effects.Length;
+                        PickupEffect effect = PickupEffect.None;
+                        while (effect == PickupEffect.None)
+                        {
+                            effect = (PickupEffect)effects.GetValue(Random.Range(0, effectsAmount));
+                        }
+                        earnedPickup = new PickupEffectDefinition(effect);
+                    }
+                }
+            }
         }
-        GlobalGameManager.Instance.pickupCollection.EarnPickup(earnedPickup);
+        if(earnedPickup != null)
+            GlobalGameManager.Instance.pickupCollection.EarnPickup(earnedPickup);
     }
 
     public void TakeDamage(int damage)
@@ -169,6 +192,10 @@ public class FightCreature : GridEntity
             currentGridSpot.OnEntityLeave(this);
             currentPath[0].OnEntityEnters(this);
             currentGridSpot = currentPath[0];
+        }
+        else
+        {
+            GlobalGameManager.Instance.tutoManager.OnTutoEvent(TutoManager.TutoStep.JustMoved);
         }
     }
 

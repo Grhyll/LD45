@@ -16,6 +16,7 @@ public class DeckBuildingManager : MonoBehaviour
     {
         editedCard.gameObject.SetActive(false);
         deckbuildingUI.createCardUI.Hide();
+        deckbuildingUI.improvingCardUI.Hide();
     }
 
     // Update is called once per frame
@@ -27,11 +28,11 @@ public class DeckBuildingManager : MonoBehaviour
     public void OnGridSpotClick(GridSpot spot)
     {
         selectedSpot = spot;
-        // TODO: Tell to right side UI
         if (spot.gridEntity != null)
         {
             cardBeingEdited = (spot.gridEntity as GridCardUI).card;
             editedCard.ShowCard(cardBeingEdited);
+            deckbuildingUI.improvingCardUI.Show(cardBeingEdited);
         }
         else
         {
@@ -45,6 +46,7 @@ public class DeckBuildingManager : MonoBehaviour
     {
         if (cardBeingEdited != null)
         {
+            deckbuildingUI.improvingCardUI.Hide();
         }
         else if (isCreatingCard)
         {
@@ -60,5 +62,6 @@ public class DeckBuildingManager : MonoBehaviour
         cardBeingEdited = card;
         editedCard.ShowCard(card);
         isCreatingCard = false;
+        deckbuildingUI.improvingCardUI.Show(cardBeingEdited);
     }
 }

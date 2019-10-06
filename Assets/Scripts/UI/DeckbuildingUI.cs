@@ -7,6 +7,7 @@ public class DeckbuildingUI : MonoBehaviour
     public GameObject startFightButton;
 
     public CreateCardUI createCardUI;
+    public ImprovingCardUI improvingCardUI;
 
     // Start is called before the first frame update
     void Awake()

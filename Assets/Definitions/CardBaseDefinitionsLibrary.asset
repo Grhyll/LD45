@@ -59,12 +59,12 @@ MonoBehaviour:
     cardType: 100
     displayName: Coco
     cardCategory: 0
-    targettingType: 0
+    targettingType: 1
     sprite: {fileID: 21300000, guid: 29003074ca0e9054b906ccf7c30bdcbb, type: 3}
     description: This little Coco isn't too scary.
     damage: 1
     manaCost: 0
-    goldReward: 0
+    goldReward: 1
     health: 1
     range: 1
     moves: 2

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ProjectileFeedback : CardFeedbackHandler
 {
-    const float speed = 200f;
-    const float castDuration = 1f;
+    const float speed = 500f;
+    const float castDuration = 0.5f;
     const float castOffset = 40f;
 
     float startDate;

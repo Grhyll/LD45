@@ -10,7 +10,9 @@ public class Card : IGameElement
 
     int manaCostBonus = 0;
 
+    int healthBonus = 0;
     int damageBonus = 0;
+    int movesBonus = 0;
 
     public Card(CardDefinitionType _cardDefinitionType)
     {
@@ -19,10 +21,10 @@ public class Card : IGameElement
 
     public int ManaCost { get { return cardDefinition.manaCost + manaCostBonus; } }
 
-    public int Health { get { return cardDefinition.health; } }
+    public int Health { get { return cardDefinition.health + healthBonus; } }
     public int Damage { get { return cardDefinition.damage + damageBonus; } }
     public int Range { get { return cardDefinition.range; } }
-    public int Moves { get { return cardDefinition.moves; } }
+    public int Moves { get { return cardDefinition.moves + movesBonus; } }
 
     GridSpot castTarget;
 
@@ -64,7 +66,7 @@ public class Card : IGameElement
                         break;
                 }
                 break;
-    }
+        }
     }
     void OnFeedbackHit()
     {
@@ -86,7 +88,7 @@ public class Card : IGameElement
     }
     void OnCardFinishedCasting()
     {
-        if (castTarget.gridEntity != null && castTarget.gridEntity is FightCreature)
+        if (castTarget != null && castTarget.gridEntity != null && castTarget.gridEntity is FightCreature)
         {
             (castTarget.gridEntity as FightCreature).ProcessHealth();
         }
@@ -126,5 +128,92 @@ public class Card : IGameElement
     //            return TargettingType.AnySpot;
     //    }
     //}
+
+    public bool AddBonus(PickupDefinition pickup, bool apply = false)
+    {
+        if (pickup.type == PickupType.Category)
+        {
+            CardCategory pickupCategory = (pickup as PickupCategoryDefinition).category;
+            switch (pickupCategory)
+            {
+                // Applying a Creature pickup
+                case CardCategory.Creature:
+                    if (cardDefinition.cardCategory == CardCategory.Creature)
+                    {
+                        if (apply)
+                        {
+                            healthBonus += 1;
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                // Applying an InstantSpell pickup
+                case CardCategory.InstantSpell:
+                    if (cardDefinition.cardCategory == CardCategory.Creature)
+                    {
+                        if (apply)
+                        {
+                            movesBonus += 1;
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                default:
+                    Debug.LogError("Pickup category " + pickupCategory + " not handled in AddBonus");
+                    return false;
+            }
+        }
+        else if (pickup.type == PickupType.Effect)
+        {
+            PickupEffect pickupEffect = (pickup as PickupEffectDefinition).effect;
+            switch (pickupEffect)
+            {
+                // Applying a Creature pickup
+                case PickupEffect.Damage:
+                    if (cardDefinition.cardCategory == CardCategory.Creature)
+                    {
+                        if (apply)
+                        {
+                            damageBonus += 1;
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        switch (cardDefinition.cardType)
+                        {
+                            case CardDefinitionType.Fireball:
+                                if (apply)
+                                {
+                                    damageBonus += 1;
+                                }
+                                return true;
+
+                            default:
+                                Debug.LogError("Pickup effect " + pickupEffect + " not handled for card type " + cardDefinition.cardType + " in AddBonus");
+                                return false;
+
+                        }
+                    }
+
+                default:
+                    Debug.LogError("Pickup effect " + pickupEffect + " not handled in AddBonus");
+                    return false;
+            }
+        }
+        else
+        {
+            Debug.LogError("Wtf, what this pickup of type " + pickup.type + "?!");
+        }
+        return false;
+    }
 
 }

@@ -435,6 +435,7 @@ public class FightManager : MonoBehaviour
             if (gridEntity is FightCreature)
             {
                 selectedBoardFightCreature = gridEntity as FightCreature;
+                GlobalGameManager.Instance.fightPanels.OnSelectedBoardEntity(selectedBoardFightCreature);
                 ProcessSelectedCreature();
             }
             else
@@ -449,6 +450,7 @@ public class FightManager : MonoBehaviour
     void UnselectSelectedFightCreature()
     {
         selectedBoardFightCreature = null;
+        GlobalGameManager.Instance.fightPanels.OnUnselectedBoardEntity();
         selectedFightCreatureMoveSet.Clear();
     }
 
@@ -554,10 +556,32 @@ public class FightManager : MonoBehaviour
 
     int GetHandMaxSize()
     {
-        return 5;
+        int currentTurn = GlobalGameManager.Instance.currentTurn;
+        if (currentTurn <= 1)
+            return 0;
+        else if (currentTurn <= 2)
+            return 1;
+        else if (currentTurn <= 5)
+            return 2;
+        else if (currentTurn <= 10)
+            return 3;
+        else if (currentTurn < 15)
+            return 4;
+        else
+            return 5;
     }
     int GetMaxManaPerTurn()
     {
-        return 3;
+        int currentTurn = GlobalGameManager.Instance.currentTurn;
+        if (currentTurn <= 2)
+            return 1;
+        else if (currentTurn <= 5)
+            return 2;
+        else if (currentTurn <= 10)
+            return 3;
+        else if (currentTurn < 15)
+            return 4;
+        else
+            return 5;
     }
 }

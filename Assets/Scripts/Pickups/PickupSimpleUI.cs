@@ -11,10 +11,15 @@ public class PickupSimpleUI : MonoBehaviour
     public PickupUI currentPickup;
 
     CreateCardUI createCardUI;
+    ImprovingCardUI improvingCardUI;
 
     public void SetManager(CreateCardUI _createCardUI)
     {
         createCardUI = _createCardUI;
+    }
+    public void SetManager(ImprovingCardUI _improvingCardUI)
+    {
+        improvingCardUI = _improvingCardUI;
     }
 
     public void SetPickup(PickupUI pickup)
@@ -42,6 +47,10 @@ public class PickupSimpleUI : MonoBehaviour
             if (createCardUI != null)
             {
                 createCardUI.OnSimplePickupCleared(this);
+            }
+            else if(improvingCardUI != null)
+            {
+                improvingCardUI.OnSimplePickupCleared(this);
             }
         }
     }
