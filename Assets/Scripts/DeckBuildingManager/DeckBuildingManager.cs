@@ -54,6 +54,7 @@ public class DeckBuildingManager : MonoBehaviour
 
     public void OnCardCreated(Card card)
     {
+        GlobalGameManager.Instance.OnGainedCard(card);
         deckbuildingUI.createCardUI.Hide();
         PlayGrid.Instance.OnNewGridCard(card, selectedSpot);
         cardBeingEdited = card;

@@ -5,13 +5,13 @@ using UnityEngine;
 
 public enum PickupType
 {
-    Category, 
-    Effect,
+    Category = 0, 
+    Effect = 1,
 }
 public enum PickupEffect
 {
-    None,
-    Damage,
+    None = 0,
+    Damage = 1,
 
 }
 public abstract class PickupDefinition 

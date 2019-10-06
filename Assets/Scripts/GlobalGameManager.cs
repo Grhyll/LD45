@@ -104,14 +104,15 @@ public class GlobalGameManager : MonoBehaviour
 
 
         ////////// TESTS
-        for (int i = 0; i < 10; i++) 
-            ownedCards.Add(new Card(CardDefinitionType.Fireball));
+        //for (int i = 0; i < 10; i++) 
+        //    ownedCards.Add(new Card(CardDefinitionType.Fireball));
         for (int i = 0; i < 4; i++)
             pickupCollection.EarnPickup(new PickupEffectDefinition(PickupEffect.Damage));
         for (int i = 0; i < 4; i++)
             pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.Creature));
         for (int i = 0; i < 4; i++)
             pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.InstantSpell));
+        CoinsAmount = 10;
     }
 
     // Update is called once per frame
@@ -180,6 +181,15 @@ public class GlobalGameManager : MonoBehaviour
                 return fightManager.GetGridSpotVisualState(spot);
         }
         return 0;
+    }
+
+    public void OnGainedCard(Card card)
+    {
+        ownedCards.Add(card);
+        if (!DoesPlayerKnowCard(card.cardDefinition.cardType))
+        {
+            knownCards.Add(card.cardDefinition.cardType);
+        }
     }
 
     public bool DoesPlayerKnowCard(CardDefinitionType type)

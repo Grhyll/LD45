@@ -8,7 +8,7 @@ public class EditedCard : MonoBehaviour
 
     public void ShowCard(Card card)
     {
-        if (GlobalGameManager.Instance.DoesPlayerKnowCard(card.cardDefinition.cardType))
+        if (card != null && GlobalGameManager.Instance.DoesPlayerKnowCard(card.cardDefinition.cardType))
         {
             gameObject.SetActive(true);
             cardUI.gameObject.SetActive(true);

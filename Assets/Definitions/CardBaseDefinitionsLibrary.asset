@@ -23,9 +23,20 @@ MonoBehaviour:
     displayName: Spell
     sprite: {fileID: 21300000, guid: c49f04a01019adb4180f0800757159c5, type: 3}
     pickupDescription: Create a powerfull spell
+  - name: None
+    category: -1
+    displayName: 
+    sprite: {fileID: 0}
+    pickupDescription: 
   pickupEffectsInfo:
-  - name: Damage
+  - name: None
     effect: 0
+    displayName: 
+    sprite: {fileID: 0}
+    color: {r: 0, g: 0, b: 0, a: 0}
+    pickupDescription: 
+  - name: Damage
+    effect: 1
     displayName: Damage
     sprite: {fileID: 21300000, guid: b20aec46e1a2f174689b6487627a7871, type: 3}
     color: {r: 1, g: 0, b: 0, a: 1}
@@ -43,7 +54,7 @@ MonoBehaviour:
     goldReward: 0
     health: 5
     range: 1
-    moves: 1
+    moves: 2
   - name: BaseEnemy
     cardType: 100
     displayName: Coco
@@ -63,10 +74,49 @@ MonoBehaviour:
     cardCategory: 1
     targettingType: 0
     sprite: {fileID: 21300000, guid: 21a810f887f4fe84abd60d3bd2e8a6d5, type: 3}
-    description: Deals {damage} anywhere on the board.
+    description: Deals {damage} damages anywhere on the board.
     damage: 3
     manaCost: 1
     goldReward: 0
+    health: 0
+    range: 0
+    moves: 0
+  - name: SmallPlayerCreature
+    cardType: 2000
+    displayName: Mini Minion
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: ee1363a6ef919ea4c9c839fe2fa2d7ba, type: 3}
+    description: A tiny gentle minion
+    damage: 1
+    manaCost: 1
+    goldReward: 1
+    health: 1
+    range: 1
+    moves: 1
+  - name: PlayerCreatureDamage
+    cardType: 2001
+    displayName: Bigger Minion
+    cardCategory: 0
+    targettingType: 1
+    sprite: {fileID: 21300000, guid: c2f6c66e4da7cdf4684917308d8e25a4, type: 3}
+    description: A slightly bigger minion
+    damage: 2
+    manaCost: 2
+    goldReward: 1
+    health: 2
+    range: 1
+    moves: 2
+  - name: None
+    cardType: -1
+    displayName: 
+    cardCategory: 0
+    targettingType: 0
+    sprite: {fileID: 0}
+    description: 
+    damage: 0
+    manaCost: 1
+    goldReward: 1
     health: 0
     range: 0
     moves: 0

@@ -5,7 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class CardCategoryInfo
 {
+    [HideInInspector]
     public string name;
+    [HideInInspector]
     public CardCategory category;
 
     public string displayName;
@@ -22,7 +24,9 @@ public class CardCategoryInfo
 [System.Serializable]
 public class PickupEffectInfo
 {
+    [HideInInspector]
     public string name;
+    [HideInInspector]
     public PickupEffect effect;
 
     public string displayName;
@@ -56,6 +60,7 @@ public class CardBaseDefinitionLibrary : ScriptableObject
                 if (((int)categoriesInfo[i].category) == type)
                 {
                     newCategoriesInfoList.Add(categoriesInfo[i]);
+                    categoriesInfo[i].name = ((CardCategory)type).ToString();
                     found = true;
                 }
             }

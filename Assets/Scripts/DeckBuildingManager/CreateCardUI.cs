@@ -121,22 +121,44 @@ public class CreateCardUI : MonoBehaviour
         }
         GlobalGameManager.Instance.pickupCollection.UpdatePickupStates();
         //TODO: Update edited card if needed (known or unknown)
+
+        if (canCreate)
+        {
+            CardDefinitionType cardDefinitionType = GetCurrentCardDefinitionType();
+            Card resultCard = new Card(cardDefinitionType);
+            GlobalGameManager.Instance.deckBuildingManager.editedCard.ShowCard(resultCard);
+        }
+        else
+        {
+            GlobalGameManager.Instance.deckBuildingManager.editedCard.ShowUnknownCard();
+        }
     }
 
     public void OnCreateButton()
     {
-        GlobalGameManager.Instance.CoinsAmount -= CalculateCost();
-        GlobalGameManager.Instance.pickupCollection.OnPickupConsumed(categorySimpleUI.currentPickup);
-        if (effect1SimpleUI.currentPickup != null)
+        CardDefinitionType cardDefinitionType = GetCurrentCardDefinitionType();
+        if (cardDefinitionType != CardDefinitionType.None)
         {
+            GlobalGameManager.Instance.CoinsAmount -= CalculateCost();
             GlobalGameManager.Instance.pickupCollection.OnPickupConsumed(categorySimpleUI.currentPickup);
+            if (effect1SimpleUI.currentPickup != null)
+            {
+                GlobalGameManager.Instance.pickupCollection.OnPickupConsumed(categorySimpleUI.currentPickup);
+            }
+            Card resultCard = new Card(cardDefinitionType);
+            GlobalGameManager.Instance.deckBuildingManager.OnCardCreated(resultCard);
         }
-        Hide();
-        //TODO: Create card
     }
 
     int CalculateCost()
     {
         return 2 + (effect1SimpleUI.currentPickup != null ? 1 : 0);
+    }
+
+    CardDefinitionType GetCurrentCardDefinitionType()
+    {
+        return CardBaseDefinition.GetCardDefinitionType(
+            categorySimpleUI.currentPickup != null ? (categorySimpleUI.currentPickup.pickupDefinition as PickupCategoryDefinition).category : CardCategory.None,
+            effect1SimpleUI.currentPickup != null ? (effect1SimpleUI.currentPickup.pickupDefinition as PickupEffectDefinition).effect : PickupEffect.None);
     }
 }
