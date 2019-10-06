@@ -11,10 +11,30 @@ public class CardCategoryInfo
     public string displayName;
     public Sprite sprite;
 
+    public string pickupDescription;
+
     public CardCategoryInfo(CardCategory _category)
     {
         name = _category.ToString();
         category = _category;
+    }
+}
+[System.Serializable]
+public class PickupEffectInfo
+{
+    public string name;
+    public PickupEffect effect;
+
+    public string displayName;
+    public Sprite sprite;
+    public Color color;
+
+    public string pickupDescription;
+
+    public PickupEffectInfo(PickupEffect _effect)
+    {
+        name = _effect.ToString();
+        effect = _effect;
     }
 }
 
@@ -22,6 +42,7 @@ public class CardCategoryInfo
 public class CardBaseDefinitionLibrary : ScriptableObject
 {
     public List<CardCategoryInfo> categoriesInfo = new List<CardCategoryInfo>();
+    public List<PickupEffectInfo> pickupEffectsInfo = new List<PickupEffectInfo>();
     public List<CardBaseDefinition> cardDefinitions = new List<CardBaseDefinition>();
 
     private void OnEnable()
@@ -44,6 +65,25 @@ public class CardBaseDefinitionLibrary : ScriptableObject
             }
         }
         categoriesInfo = newCategoriesInfoList;
+
+        List<PickupEffectInfo> newPickupEffectsInfoList = new List<PickupEffectInfo>();
+        foreach (int type in System.Enum.GetValues(typeof(PickupEffect)))
+        {
+            bool found = false;
+            for (int i = 0; i < pickupEffectsInfo.Count; i++)
+            {
+                if (((int)pickupEffectsInfo[i].effect) == type)
+                {
+                    newPickupEffectsInfoList.Add(pickupEffectsInfo[i]);
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                newPickupEffectsInfoList.Add(new PickupEffectInfo((PickupEffect)type));
+            }
+        }
+        pickupEffectsInfo = newPickupEffectsInfoList;
 
         List<CardBaseDefinition> newCardDefinitionsList = new List<CardBaseDefinition>();
         foreach (int type in System.Enum.GetValues(typeof(CardDefinitionType)))
@@ -75,6 +115,20 @@ public class CardBaseDefinitionLibrary : ScriptableObject
             }
         }
         Debug.LogError("Error: couldn't find category info for " + category + " in card definitions library.");
+        return null;
+    }
+
+
+    public PickupEffectInfo GetPickupEffectInfo(PickupEffect effect)
+    {
+        for (int i = 0; i < pickupEffectsInfo.Count; i++)
+        {
+            if (pickupEffectsInfo[i].effect == effect)
+            {
+                return pickupEffectsInfo[i];
+            }
+        }
+        Debug.LogError("Error: couldn't find pickup effect info for " + effect + " in card definitions library.");
         return null;
     }
 

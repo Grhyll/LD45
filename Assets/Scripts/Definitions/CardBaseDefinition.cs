@@ -50,6 +50,9 @@ public class CardBaseDefinition
     [Header("Player playable cards.")]
     public int manaCost = 1;
 
+    [Header("Enemies")]
+    public int goldReward = 1;
+
     [Header("Creatures")]
     public int health = 0;
     public int range = 0;

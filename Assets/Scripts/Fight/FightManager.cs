@@ -351,7 +351,10 @@ public class FightManager : MonoBehaviour
                 if (i <= currentStateElementIndex)
                     currentStateElementIndex--;
             }
-            GlobalGameManager.Instance.CoinsAmount += creature.coinsGain;
+
+            //GlobalGameManager.Instance.CoinsAmount += creature.coinsGain;
+            creature.ReapReward();
+
             enemyCreatures.RemoveAt(i);
             if (enemyCreatures.Count == 0)
             {

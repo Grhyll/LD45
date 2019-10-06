@@ -18,8 +18,6 @@ public class FightCreature : GridEntity
     public bool isAlly { get; private set; }
     public bool isMC { get; private set; }
 
-    public int coinsGain = 1;
-
     public GridSpot currentGridSpot { get; private set; }
     public int turnRemainingMoves { get; private set; }
 
@@ -93,6 +91,27 @@ public class FightCreature : GridEntity
                 }
             }
         }
+    }
+
+    public void ReapReward()
+    {
+        GlobalGameManager.Instance.CoinsAmount += card.cardDefinition.goldReward;
+        PickupDefinition earnedPickup;
+        if (Random.Range(0f, 1f) < 0.3f)
+        {
+            System.Array categories = System.Enum.GetValues(typeof(CardCategory));
+            int categoriesAmount = categories.Length;
+            CardCategory category = (CardCategory)categories.GetValue(Random.Range(0, categoriesAmount));
+            earnedPickup = new PickupCategoryDefinition(category);
+        }
+        else
+        {
+            System.Array effects = System.Enum.GetValues(typeof(PickupEffect));
+            int effectsAmount = effects.Length;
+            PickupEffect effect = (PickupEffect)effects.GetValue(Random.Range(0, effectsAmount));
+            earnedPickup = new PickupEffectDefinition(effect);
+        }
+        GlobalGameManager.Instance.pickupCollection.EarnPickup(earnedPickup);
     }
 
     public void TakeDamage(int damage)

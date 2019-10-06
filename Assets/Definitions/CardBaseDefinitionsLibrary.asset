@@ -17,10 +17,19 @@ MonoBehaviour:
     category: 0
     displayName: Creature
     sprite: {fileID: 21300000, guid: de9bf467d8bcec747835abaa7f4566bb, type: 3}
+    pickupDescription: Create a creature to summon
   - name: InstantSpell
     category: 1
     displayName: Spell
     sprite: {fileID: 21300000, guid: c49f04a01019adb4180f0800757159c5, type: 3}
+    pickupDescription: Create a powerfull spell
+  pickupEffectsInfo:
+  - name: Damage
+    effect: 0
+    displayName: Damage
+    sprite: {fileID: 21300000, guid: b20aec46e1a2f174689b6487627a7871, type: 3}
+    color: {r: 1, g: 0, b: 0, a: 1}
+    pickupDescription: Improves damages
   cardDefinitions:
   - name: MC
     cardType: 0

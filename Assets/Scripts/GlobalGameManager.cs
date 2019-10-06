@@ -15,6 +15,7 @@ public class GlobalGameManager : MonoBehaviour
     //public CreatureDefinitionsLibrary creatureDefinitionsLibrary;
     public CardBaseDefinitionLibrary cardBaseDefinitionsLibrary;
 
+    public PickupCollection pickupCollection;
     public DeckBuildingManager deckBuildingManager;
     public GameObject busyRaycastBlocker;
 
