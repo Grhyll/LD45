@@ -10,6 +10,7 @@ public enum PickupType
 }
 public enum PickupEffect
 {
+    None,
     Damage,
 
 }

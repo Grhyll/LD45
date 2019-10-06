@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class PickupCollection : MonoBehaviour
 {
+    public enum CollectionState
+    {
+        Consulting, 
+        Creating, 
+        Improving,
+    }
+
     public GameObject sellButton;
+
+    CollectionState collectionState = CollectionState.Consulting;
 
     PickupUI pickupModel;
 
@@ -16,6 +25,8 @@ public class PickupCollection : MonoBehaviour
     PickupUI selectedPickup;
 
     const int maxPickupsAmount = 12;
+
+    CreateCardUI createCardUI { get { return GlobalGameManager.Instance.deckBuildingManager.deckbuildingUI.createCardUI; } }
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +46,13 @@ public class PickupCollection : MonoBehaviour
         
     }
 
+    public void OnNewState(CollectionState newState)
+    {
+        UnselectSelectedPickup();
+        collectionState = newState;
+        UpdatePickupStates();
+    }
+
     public void EarnPickup(PickupDefinition pickup)
     {
         if (pickups.Count >= maxPickupsAmount)
@@ -47,6 +65,38 @@ public class PickupCollection : MonoBehaviour
         newPickupUI.Init(pickup, this);
         pickups.Add(newPickupUI);
         Reorganize();
+    }
+    public void OnPickupConsumed(PickupUI pickup)
+    {
+        pickups.Remove(pickup);
+        Reorganize();
+    }
+
+    public void UpdatePickupStates()
+    {
+        switch (collectionState)
+        {
+            case CollectionState.Consulting:
+                for (int i = 0; i < pickups.Count; i++)
+                {
+                    pickups[i].EnableSelection();
+                }
+                break;
+
+            case CollectionState.Creating:
+                for (int i = 0; i < pickups.Count; i++)
+                {
+                    if (createCardUI.CanSelectPickup(pickups[i].pickupDefinition))
+                    {
+                        pickups[i].EnableSelection();
+                    }
+                    else
+                    {
+                        pickups[i].DisableSelection();
+                    }
+                }
+                break;
+        }
     }
 
     void Reorganize()
@@ -61,20 +111,36 @@ public class PickupCollection : MonoBehaviour
 
     public void OnPickupClicked(PickupUI pickup)
     {
-        if (pickup == selectedPickup)
+        switch (collectionState)
+        {
+            case CollectionState.Consulting:
+                if (pickup == selectedPickup)
+                {
+                    UnselectSelectedPickup();
+                }
+                else
+                {
+                    if (selectedPickup != null)
+                        selectedPickup.Unselect();
+
+                    selectedPickup = pickup;
+                    selectedPickup.Select();
+                    sellButton.SetActive(true);
+                }
+                break;
+
+            case CollectionState.Creating:
+                createCardUI.OnSelectedPickup(pickup);
+                break;
+        }
+    }
+    void UnselectSelectedPickup()
+    {
+        if (selectedPickup != null)
         {
             selectedPickup.Unselect();
             sellButton.SetActive(false);
             selectedPickup = null;
-        }
-        else
-        {
-            if (selectedPickup != null)
-                selectedPickup.Unselect();
-
-            selectedPickup = pickup;
-            selectedPickup.Select();
-            sellButton.SetActive(true);
         }
     }
 

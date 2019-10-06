@@ -14,7 +14,13 @@ public class PickupUI : MonoBehaviour
     public GameObject description;
     public TextMeshProUGUI descriptionLabel;
 
+    public GameObject disabledImage;
+
+    public PickupDefinition pickupDefinition { get; private set; }
+
     PickupCollection collection;
+
+    bool isDisabled = false;
 
     public void Init(PickupDefinition pickup, PickupCollection _collection)
     {
@@ -27,11 +33,18 @@ public class PickupUI : MonoBehaviour
         collection = _collection;
 
         selectedBackground.SetActive(false);
+
+        pickupDefinition = pickup;
+
+        disabledImage.SetActive(false);
     }
 
     public void OnPointerEnter()
     {
-        description.SetActive(true);
+        if (!isDisabled)
+        {
+            description.SetActive(true);
+        }
     }
     public void OnPointerExit()
     {
@@ -39,7 +52,10 @@ public class PickupUI : MonoBehaviour
     }
     public void OnClick()
     {
-        collection.OnPickupClicked(this);
+        if (!isDisabled)
+        {
+            collection.OnPickupClicked(this);
+        }
     }
 
     public void Select()
@@ -49,5 +65,16 @@ public class PickupUI : MonoBehaviour
     public void Unselect()
     {
         selectedBackground.SetActive(false);
+    }
+
+    public void DisableSelection()
+    {
+        disabledImage.SetActive(true);
+        isDisabled = true;
+    }
+    public void EnableSelection()
+    {
+        disabledImage.SetActive(false);
+        isDisabled = false;
     }
 }

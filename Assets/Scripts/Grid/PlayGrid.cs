@@ -99,13 +99,16 @@ public class PlayGrid : MonoBehaviour
         for (int i = 0; i < cards.Count && i < size * size; i++)
         {
             GridSpot spot = GetSpot(i % size, size - 1 - (i / size));
-
-            GridCardUI newCardUI = Instantiate(gridCardUIModel.gameObject, gridCardUIModel.transform.parent).GetComponent<GridCardUI>();
-            newCardUI.gameObject.SetActive(true);
-            newCardUI.Init(cards[i], spot);
-            newCardUI.transform.localPosition = spot.transform.localPosition;
-            spot.OnEntityEnters(newCardUI);
+            OnNewGridCard(cards[i], spot);
         }
+    }
+    public void OnNewGridCard(Card card, GridSpot spot)
+    {
+        GridCardUI newCardUI = Instantiate(gridCardUIModel.gameObject, gridCardUIModel.transform.parent).GetComponent<GridCardUI>();
+        newCardUI.gameObject.SetActive(true);
+        newCardUI.Init(card, spot);
+        newCardUI.transform.localPosition = spot.transform.localPosition;
+        spot.OnEntityEnters(newCardUI);
     }
 
     public GridSpot GetSpot(int coordX, int coordY, bool onlyIfFree = false)

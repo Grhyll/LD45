@@ -16,7 +16,7 @@ MonoBehaviour:
   - name: Creature
     category: 0
     displayName: Creature
-    sprite: {fileID: 21300000, guid: de9bf467d8bcec747835abaa7f4566bb, type: 3}
+    sprite: {fileID: 21300000, guid: 0b5403f4a12fba64e8b6b8e8f1c9d153, type: 3}
     pickupDescription: Create a creature to summon
   - name: InstantSpell
     category: 1
@@ -40,6 +40,7 @@ MonoBehaviour:
     description: It's you.
     damage: 1
     manaCost: 0
+    goldReward: 0
     health: 5
     range: 1
     moves: 1
@@ -52,6 +53,7 @@ MonoBehaviour:
     description: This little Coco isn't too scary.
     damage: 1
     manaCost: 0
+    goldReward: 0
     health: 1
     range: 1
     moves: 2
@@ -62,8 +64,9 @@ MonoBehaviour:
     targettingType: 0
     sprite: {fileID: 21300000, guid: 21a810f887f4fe84abd60d3bd2e8a6d5, type: 3}
     description: Deals {damage} anywhere on the board.
-    damage: 1
+    damage: 3
     manaCost: 1
+    goldReward: 0
     health: 0
     range: 0
     moves: 0

@@ -6,19 +6,29 @@ public class EditedCard : MonoBehaviour
 {
     public CardUI cardUI;
 
-    // Start is called before the first frame update
-    void Start()
+    public void ShowCard(Card card)
     {
-        
+        if (GlobalGameManager.Instance.DoesPlayerKnowCard(card.cardDefinition.cardType))
+        {
+            gameObject.SetActive(true);
+            cardUI.gameObject.SetActive(true);
+            cardUI.Init(card);
+        }
+        else
+        {
+            ShowUnknownCard();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ShowUnknownCard()
     {
-        
+        gameObject.SetActive(true);
+        cardUI.InitUnknown();
     }
 
     public void OnBackgroundClick()
     {
+        gameObject.SetActive(false);
+        GlobalGameManager.Instance.deckBuildingManager.OnClosedEditedCard();
     }
 }

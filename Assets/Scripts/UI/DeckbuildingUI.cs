@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DeckbuildingUI : MonoBehaviour
 {
+    public GameObject startFightButton;
+
+    public CreateCardUI createCardUI;
+
     // Start is called before the first frame update
     void Awake()
     {

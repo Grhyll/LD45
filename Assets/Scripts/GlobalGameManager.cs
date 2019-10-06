@@ -27,6 +27,8 @@ public class GlobalGameManager : MonoBehaviour
     public List<Card> ownedCards { get; set; }
     public Card mcCard;
 
+    public List<CardDefinitionType> knownCards { get; private set; }
+
     int _coinsAmount = 0;
     public int CoinsAmount
     {
@@ -96,8 +98,20 @@ public class GlobalGameManager : MonoBehaviour
         mcCard = new Card(CardDefinitionType.MC);
 
         ownedCards = new List<Card>();
+
+        knownCards = new List<CardDefinitionType>();
+        knownCards.Add(CardDefinitionType.MC);
+
+
+        ////////// TESTS
         for (int i = 0; i < 10; i++) 
-        ownedCards.Add(new Card(CardDefinitionType.Fireball));
+            ownedCards.Add(new Card(CardDefinitionType.Fireball));
+        for (int i = 0; i < 4; i++)
+            pickupCollection.EarnPickup(new PickupEffectDefinition(PickupEffect.Damage));
+        for (int i = 0; i < 4; i++)
+            pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.Creature));
+        for (int i = 0; i < 4; i++)
+            pickupCollection.EarnPickup(new PickupCategoryDefinition(CardCategory.InstantSpell));
     }
 
     // Update is called once per frame
@@ -153,6 +167,9 @@ public class GlobalGameManager : MonoBehaviour
             case GameState.Fight:
                 fightManager.OnGridSpotClick(spot);
                 break;
+            case GameState.Deckbuilding:
+                deckBuildingManager.OnGridSpotClick(spot);
+                break;
         }
     }
     public GridSpot.GridSpotVisualState GetGridSpotVisualState(GridSpot spot)
@@ -163,6 +180,11 @@ public class GlobalGameManager : MonoBehaviour
                 return fightManager.GetGridSpotVisualState(spot);
         }
         return 0;
+    }
+
+    public bool DoesPlayerKnowCard(CardDefinitionType type)
+    {
+        return knownCards.Contains(type);
     }
 
     public void OnBusyElement(IGameElement busyElement)
