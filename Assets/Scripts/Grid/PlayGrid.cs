@@ -12,6 +12,7 @@ public class PlayGrid : MonoBehaviour
 
     // Opti: pool that (and so many other things...)
     FightCreature fightCreatureModel;
+    GridCardUI gridCardUIModel;
 
     public FightCreature mc { get; private set; }
 
@@ -55,6 +56,10 @@ public class PlayGrid : MonoBehaviour
         fightCreatureModel.transform.localScale = Vector3.one * spotScale;
         fightCreatureModel.gameObject.SetActive(false);
 
+        gridCardUIModel = GetComponentInChildren<GridCardUI>();
+        gridCardUIModel.transform.localScale = Vector3.one * spotScale;
+        gridCardUIModel.gameObject.SetActive(false);
+
         gridFeedbackManager.transform.localScale = Vector3.one * spotScale;
     }
 
@@ -83,6 +88,23 @@ public class PlayGrid : MonoBehaviour
         {
             Debug.LogWarning("Trying to spawn fight creature on taken spot.");
             return null;
+        }
+    }
+
+    public void PopulateWithCards()
+    {
+        List<Card> cards = new List<Card>();
+        cards.Add(GlobalGameManager.Instance.mcCard);
+        cards.AddRange(GlobalGameManager.Instance.ownedCards);
+        for (int i = 0; i < cards.Count && i < size * size; i++)
+        {
+            GridSpot spot = GetSpot(i % size, size - 1 - (i / size));
+
+            GridCardUI newCardUI = Instantiate(gridCardUIModel.gameObject, gridCardUIModel.transform.parent).GetComponent<GridCardUI>();
+            newCardUI.gameObject.SetActive(true);
+            newCardUI.Init(cards[i], spot);
+            newCardUI.transform.localPosition = spot.transform.localPosition;
+            spot.OnEntityEnters(newCardUI);
         }
     }
 

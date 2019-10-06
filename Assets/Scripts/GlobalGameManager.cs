@@ -106,7 +106,9 @@ public class GlobalGameManager : MonoBehaviour
         if (CurrentGameState == GameState.None)
         {
             busyRaycastBlocker.SetActive(false);
-            StartFight();
+            //TODO: restore
+            //StartFight();
+            ShowCollection();
         }
 
         if (IsBusy())
@@ -126,15 +128,21 @@ public class GlobalGameManager : MonoBehaviour
             }
         }
     }
-
-    public void OnFightVictoryScreenEnded()
-    {
-        CurrentGameState = GameState.Deckbuilding;
-    }
     public void StartFight()
     {
         currentTurn++;
         CurrentGameState = GameState.Fight;
+    }
+
+    public void OnFightVictoryScreenEnded()
+    {
+        ShowCollection();
+    }
+
+    public void ShowCollection()
+    {
+        CurrentGameState = GameState.Deckbuilding;
+        grid.PopulateWithCards();
     }
 
     // If this wasn't a game jam, this function would definitely not be there

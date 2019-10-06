@@ -32,6 +32,11 @@ public class Card : IGameElement
     {
         string result = cardDefinition.description;
         result = result.Replace(damageKey, Damage.ToString());
+        if (cardDefinition.cardCategory == CardCategory.Creature)
+        {
+            result += "\nMoves per turn: " + Moves.ToString();
+            result += "\nAttack range: " + Range.ToString();
+        }
         return result;
     }
 

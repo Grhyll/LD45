@@ -65,6 +65,7 @@ public class PickupCollection : MonoBehaviour
         {
             selectedPickup.Unselect();
             sellButton.SetActive(false);
+            selectedPickup = null;
         }
         else
         {
@@ -79,5 +80,14 @@ public class PickupCollection : MonoBehaviour
 
     public void OnSellButton()
     {
+        if (selectedPickup != null)
+        {
+            GlobalGameManager.Instance.CoinsAmount += 1;
+            pickups.Remove(selectedPickup);
+            Destroy(selectedPickup.gameObject);
+            selectedPickup = null;
+            sellButton.SetActive(false);
+            Reorganize();
+        }
     }
 }

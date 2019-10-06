@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EditedCard : MonoBehaviour
 {
+    public CardUI cardUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,9 @@ public class EditedCard : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OnBackgroundClick()
+    {
     }
 }
